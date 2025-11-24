@@ -2,7 +2,7 @@
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
       <!-- Navigation List -->
-      <ion-content>
+      <ion-content style="display: flex; flex-direction: column;">
         <ion-list id="menu-list">
           <ion-list-header>
             <ion-label>Budget UI</ion-label>
@@ -24,6 +24,14 @@
             </ion-menu-toggle>
           }
         </ion-list>
+        
+        <!-- Logout Button -->
+        <div style="margin-top: auto; padding: 16px;">
+          <ion-button expand="block" fill="clear" color="medium">
+            <ion-icon slot="start" name="log-out"></ion-icon>
+            <ion-label>LOGOUT</ion-label>
+          </ion-button>
+        </div>
       </ion-content>
     </ion-menu>
 

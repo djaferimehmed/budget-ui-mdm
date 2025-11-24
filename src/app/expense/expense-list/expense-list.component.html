@@ -1,1 +1,102 @@
-Expense List
+<ion-content style="display: flex; flex-direction: column;">
+  <!-- Header mit Titel -->
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Expenses</ion-title>
+      <!-- User Info -->
+      <div slot="end" style="display: flex; align-items: center; gap: 6px; padding-right: 12px;">
+        <ion-icon name="person-circle" style="font-size: 26px;"></ion-icon>
+        <span style="font-size: 14px;">Mehmed Djaferi</span>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Filter und Search Bar -->
+  <div style="padding: 12px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <!-- Search Bar -->
+    <ion-searchbar placeholder="Search" style="flex: 1; min-width: 200px;"></ion-searchbar>
+    
+    <!-- Category Filter -->
+    <ion-select placeholder="Category" style="min-width: 150px;">
+      <ion-select-option value="all">All Categories</ion-select-option>
+    </ion-select>
+
+    <!-- Sort Dropdown -->
+    <ion-select placeholder="Date (newest first)" style="min-width: 180px;">
+      <ion-select-option value="date-desc">Date (newest first)</ion-select-option>
+      <ion-select-option value="date-asc">Date (oldest first)</ion-select-option>
+    </ion-select>
+  </div>
+
+  <!-- Expense Liste - Gruppiert nach Datum -->
+  <ion-list>
+    <!-- Gruppe für 19.11.2025 -->
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>19.11.2025</ion-label>
+      </ion-item-divider>
+      <ion-item button>
+        <ion-label>
+          <h2>232323</h2>
+          <p>CHF 23.00</p>
+        </ion-label>
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+      </ion-item>
+    </ion-item-group>
+
+    <!-- Gruppe für 10.11.2025 -->
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>10.11.2025</ion-label>
+      </ion-item-divider>
+      <ion-item button>
+        <ion-label>
+          <h2>3e3e</h2>
+          <p>CHF 23.00</p>
+        </ion-label>
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+      </ion-item>
+      <ion-item button>
+        <ion-label>
+          <h2>Scjeadsf</h2>
+          <p>CHF 232'323.00</p>
+        </ion-label>
+        <ion-label slot="end">
+          <ion-chip>
+            <ion-icon name="pricetag"></ion-icon>
+            <ion-label>TEst</ion-label>
+          </ion-chip>
+        </ion-label>
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+      </ion-item>
+      <ion-item button>
+        <ion-label>
+          <h2>wfwefwfwef</h2>
+          <p>CHF 22.00</p>
+        </ion-label>
+        <ion-icon slot="end" name="chevron-forward"></ion-icon>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  <!-- Bottom Bar mit Monat Navigation und Add Button -->
+  <div style="padding: 14px 16px; margin-top: auto;
+              display: flex; justify-content: space-between; align-items: center;
+              background: var(--ion-background-color); border-top: 1px solid var(--ion-color-step-200);">
+    <!-- Monat Navigation -->
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <ion-button fill="clear" size="small" (click)="addMonths(-1)">
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+      </ion-button>
+      <span style="font-size: 15px;">{{ currentMonthYear }}</span>
+      <ion-button fill="clear" size="small" (click)="addMonths(1)">
+        <ion-icon slot="icon-only" name="chevron-forward"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Add Button -->
+    <ion-fab-button size="small" (click)="openAddModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </div>
+</ion-content>
