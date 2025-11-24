@@ -1,15 +1,19 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="cancel()">
+      <ion-button (click)="cancel()" [disabled]="loading">
         <ion-icon name="close"></ion-icon>
         <span style="margin-left: 8px;">CANCEL</span>
       </ion-button>
     </ion-buttons>
     <ion-title>Add Expense</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="save()">
-        <ion-icon name="save"></ion-icon>
+      <ion-button (click)="save()" [disabled]="loading || form.invalid">
+        @if (loading) {
+          <ion-spinner name="crescent" style="width: 20px; height: 20px;"></ion-spinner>
+        } @else {
+          <ion-icon name="save"></ion-icon>
+        }
         <span style="margin-left: 8px;">SAVE</span>
       </ion-button>
     </ion-buttons>
@@ -17,44 +21,95 @@
 </ion-header>
 
 <ion-content>
+  @if (loading) {
+    <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  }
+
   <div style="padding: 16px;">
-    <!-- Name Input -->
-    <ion-item style="margin-bottom: 16px;">
-      <ion-icon slot="start" name="text" style="font-size: 20px; margin-right: 12px;"></ion-icon>
-      <ion-label position="stacked">Name</ion-label>
-      <ion-input placeholder="Enter name" autofocus></ion-input>
-    </ion-item>
+    <!-- Error Message -->
+    @if (errorMessage) {
+      <ion-item color="danger" style="margin-bottom: 16px; border-radius: 8px;">
+        <ion-icon slot="start" name="alert-circle"></ion-icon>
+        <ion-label>
+          <ion-text color="danger">{{ errorMessage }}</ion-text>
+        </ion-label>
+      </ion-item>
+    }
 
-    <!-- Category Dropdown -->
-    <ion-item style="margin-bottom: 16px;">
-      <ion-icon slot="start" name="pricetag" style="font-size: 20px; margin-right: 12px;"></ion-icon>
-      <ion-label position="stacked">Category</ion-label>
-      <ion-select placeholder="Select category" style="flex: 1;">
-        <ion-select-option value="">No Category</ion-select-option>
-      </ion-select>
-      <ion-button slot="end" fill="solid" size="small" color="primary" (click)="showCategoryModal()" style="margin-left: 8px; --padding-start: 8px; --padding-end: 8px; min-width: auto; width: 32px; height: 32px;">
-        <ion-icon name="add" slot="icon-only"></ion-icon>
-      </ion-button>
-    </ion-item>
+    <form [formGroup]="form">
+      <!-- Name Input -->
+      <ion-item style="margin-bottom: 16px;" [class.ion-invalid]="name?.invalid && name?.touched">
+        <ion-icon slot="start" name="text" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input 
+          #nameInput
+          formControlName="name" 
+          placeholder="Enter name" 
+          [disabled]="loading"
+          required></ion-input>
+        @if (name?.invalid && name?.touched) {
+          <ion-note slot="error">Name is required</ion-note>
+        }
+      </ion-item>
 
-    <!-- Amount Input -->
-    <ion-item style="margin-bottom: 16px;">
-      <ion-icon slot="start" name="cash" style="font-size: 20px; margin-right: 12px;"></ion-icon>
-      <ion-label position="stacked">Amount</ion-label>
-      <ion-input type="number" placeholder="0.00" style="flex: 1;"></ion-input>
-      <ion-label slot="end" style="margin-left: 8px;">CHF</ion-label>
-    </ion-item>
+      <!-- Category Dropdown -->
+      <ion-item style="margin-bottom: 16px;">
+        <ion-icon slot="start" name="pricetag" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+        <ion-label position="stacked">Category</ion-label>
+        <ion-select 
+          formControlName="categoryId" 
+          placeholder="Select category" 
+          style="flex: 1;"
+          [disabled]="loading">
+          <ion-select-option [value]="null">No Category</ion-select-option>
+          @for (category of categories; track category.id) {
+            <ion-select-option [value]="category.id">{{ category.name }}</ion-select-option>
+          }
+        </ion-select>
+        <ion-button 
+          slot="end" 
+          fill="solid" 
+          size="small" 
+          color="primary" 
+          (click)="showCategoryModal()" 
+          [disabled]="loading"
+          style="margin-left: 8px; --padding-start: 8px; --padding-end: 8px; min-width: auto; width: 32px; height: 32px;">
+          <ion-icon name="add" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
 
-    <!-- Date Input -->
-    <ion-item style="margin-bottom: 16px;">
-      <ion-icon slot="start" name="calendar" style="font-size: 20px; margin-right: 12px;"></ion-icon>
-      <ion-label position="stacked">Date</ion-label>
-      <ion-datetime-button datetime="datetime" style="flex: 1;"></ion-datetime-button>
-    </ion-item>
-    <ion-modal [keepContentsMounted]="true">
-      <ng-template>
-        <ion-datetime id="datetime" presentation="date"></ion-datetime>
-      </ng-template>
-    </ion-modal>
+      <!-- Amount Input -->
+      <ion-item style="margin-bottom: 16px;" [class.ion-invalid]="amount?.invalid && amount?.touched">
+        <ion-icon slot="start" name="cash" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+        <ion-label position="stacked">Amount</ion-label>
+        <ion-input 
+          type="number" 
+          formControlName="amount"
+          placeholder="0.00" 
+          step="0.01"
+          min="0.01"
+          style="flex: 1;"
+          [disabled]="loading"
+          required></ion-input>
+        <ion-label slot="end" style="margin-left: 8px;">CHF</ion-label>
+        @if (amount?.invalid && amount?.touched) {
+          <ion-note slot="error">Amount must be greater than 0</ion-note>
+        }
+      </ion-item>
+
+      <!-- Date Input -->
+      <ion-item style="margin-bottom: 16px;">
+        <ion-icon slot="start" name="calendar" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+        <ion-label position="stacked">Date</ion-label>
+        <ion-input 
+          type="date" 
+          formControlName="date"
+          style="flex: 1;"
+          [disabled]="loading"
+          required></ion-input>
+      </ion-item>
+    </form>
   </div>
 </ion-content>
