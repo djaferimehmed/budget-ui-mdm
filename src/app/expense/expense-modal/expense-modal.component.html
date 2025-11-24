@@ -1,1 +1,60 @@
-Expense Modal
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close"></ion-icon>
+        <span style="margin-left: 8px;">CANCEL</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Add Expense</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()">
+        <ion-icon name="save"></ion-icon>
+        <span style="margin-left: 8px;">SAVE</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="padding: 16px;">
+    <!-- Name Input -->
+    <ion-item style="margin-bottom: 16px;">
+      <ion-icon slot="start" name="text" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+      <ion-label position="stacked">Name</ion-label>
+      <ion-input placeholder="Enter name" autofocus></ion-input>
+    </ion-item>
+
+    <!-- Category Dropdown -->
+    <ion-item style="margin-bottom: 16px;">
+      <ion-icon slot="start" name="pricetag" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+      <ion-label position="stacked">Category</ion-label>
+      <ion-select placeholder="Select category" style="flex: 1;">
+        <ion-select-option value="">No Category</ion-select-option>
+      </ion-select>
+      <ion-button slot="end" fill="solid" size="small" color="primary" (click)="showCategoryModal()" style="margin-left: 8px; --padding-start: 8px; --padding-end: 8px; min-width: auto; width: 32px; height: 32px;">
+        <ion-icon name="add" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+    <!-- Amount Input -->
+    <ion-item style="margin-bottom: 16px;">
+      <ion-icon slot="start" name="cash" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+      <ion-label position="stacked">Amount</ion-label>
+      <ion-input type="number" placeholder="0.00" style="flex: 1;"></ion-input>
+      <ion-label slot="end" style="margin-left: 8px;">CHF</ion-label>
+    </ion-item>
+
+    <!-- Date Input -->
+    <ion-item style="margin-bottom: 16px;">
+      <ion-icon slot="start" name="calendar" style="font-size: 20px; margin-right: 12px;"></ion-icon>
+      <ion-label position="stacked">Date</ion-label>
+      <ion-datetime-button datetime="datetime" style="flex: 1;"></ion-datetime-button>
+    </ion-item>
+    <ion-modal [keepContentsMounted]="true">
+      <ng-template>
+        <ion-datetime id="datetime" presentation="date"></ion-datetime>
+      </ng-template>
+    </ion-modal>
+  </div>
+</ion-content>

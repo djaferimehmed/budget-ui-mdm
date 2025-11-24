@@ -3,13 +3,47 @@ import { ModalController } from '@ionic/angular/standalone';
 import { ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { add, calendar, cash, close, pricetag, save, text, trash } from 'ionicons/icons';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
+  IonDatetimeButton,
+  IonModal,
+  IonDatetime
+} from '@ionic/angular/standalone';
 import CategoryModalComponent from '../../category/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-expense-modal',
   templateUrl: './expense-modal.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule]
+  imports: [
+    ReactiveFormsModule,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonIcon,
+    IonContent,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonSelect,
+    IonSelectOption,
+    IonDatetimeButton,
+    IonModal,
+    IonDatetime
+  ]
 })
 export default class ExpenseModalComponent {
   // DI
