@@ -1,0 +1,57 @@
+{
+  "name": "budget-ui",
+  "version": "1.0.0",
+  "description": "Budget UI",
+  "author": "Timo Schlatter",
+  "homepage": "https://bugdet-ui.onrender.com/",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "prettier": "prettier --write \"src/**/*.ts\" \"src/**/*.html\" \"src/**/*.scss\""
+  },
+  "dependencies": {
+    "@angular/animations": "^20.1.3",
+    "@angular/common": "^20.1.3",
+    "@angular/core": "^20.1.3",
+    "@angular/fire": "20.0.1",
+    "@angular/forms": "^20.1.3",
+    "@angular/platform-browser": "^20.1.3",
+    "@angular/platform-browser-dynamic": "^20.1.3",
+    "@angular/platform-server": "^20.1.3",
+    "@angular/router": "^20.1.3",
+    "@angular/service-worker": "^20.1.3",
+    "@ionic/angular": "^8.6.5",
+    "@ionic/angular-server": "^8.6.5",
+    "date-fns": "^2.30.0",
+    "echarts": "^5.6.0",
+    "ionicons": "^8.0.13",
+    "ngx-echarts": "^20.0.1",
+    "rxjs": "~7.8.1",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.1.3",
+    "@angular/cli": "^20.1.3",
+    "@angular/compiler": "^20.1.3",
+    "@angular/compiler-cli": "^20.1.3",
+    "@angular/language-service": "^20.1.3",
+    "@ionic/angular-toolkit": "^12.2.0",
+    "@types/node": "^12.11.1",
+    "angular-eslint": "20.1.1",
+    "eslint": "^9.28.0",
+    "prettier": "^3.3.3",
+    "ts-node": "~8.3.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.33.1"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  }
+}

@@ -1,0 +1,33 @@
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <!-- Navigation List -->
+      <ion-content>
+        <ion-list id="menu-list">
+          <ion-list-header>
+            <ion-label>Budget UI</ion-label>
+          </ion-list-header>
+
+          @for (page of appPages; track page.title; let i = $index) {
+            <ion-menu-toggle auto-hide="false">
+              <ion-item
+                routerDirection="root"
+                lines="none"
+                detail="false"
+                routerLinkActive="selected"
+                [button]="true"
+                [routerLink]="[page.url]"
+              >
+                <ion-icon slot="start" [name]="page.icon" />
+                <ion-label>{{ page.title }}</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+          }
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <!-- Router Outlet -->
+    <ion-router-outlet id="main-content" />
+  </ion-split-pane>
+</ion-app>
