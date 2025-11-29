@@ -39,7 +39,7 @@
         </ion-label>
       </ion-item>
     } @else {
-      @for (category of categories(); track category.id) {
+      @for (category of categories(); track category.id || category.name) {
         <ion-item button (click)="openEditModal(category)">
           <ion-label>
             <h2>{{ category.name }}</h2>

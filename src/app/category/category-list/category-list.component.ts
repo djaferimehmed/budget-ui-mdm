@@ -141,11 +141,19 @@ export default class CategoryListComponent implements OnInit {
     });
     
     await modal.present();
-    const { role } = await modal.onWillDismiss();
+    const { role, data } = await modal.onWillDismiss();
     
     if (role === 'saved') {
-      // Reload categories
-      this.searchSubject.next(this.searchTerm());
+      // Reload categories to show the new/updated category
+      this.loading.set(true);
+      try {
+        const categories = await this.loadCategories(this.searchTerm());
+        this.categories.set(categories);
+      } catch (error) {
+        console.error('Error reloading categories:', error);
+      } finally {
+        this.loading.set(false);
+      }
       
       // Show success message
       const toast = await this.toastCtrl.create({
@@ -161,31 +169,33 @@ export default class CategoryListComponent implements OnInit {
   async openEditModal(category: Category): Promise<void> {
     const modal = await this.modalCtrl.create({
       component: CategoryModalComponent,
-      componentProps: { category }
+      componentProps: { 
+        categoryInput: category 
+      }
     });
     
     await modal.present();
-    const { role } = await modal.onWillDismiss();
+    const { role, data } = await modal.onWillDismiss();
     
-    if (role === 'saved') {
-      // Reload categories
-      this.searchSubject.next(this.searchTerm());
+    if (role === 'saved' || role === 'deleted') {
+      // Reload categories to reflect changes
+      this.loading.set(true);
+      try {
+        const categories = await this.loadCategories(this.searchTerm());
+        this.categories.set(categories);
+      } catch (error) {
+        console.error('Error reloading categories:', error);
+      } finally {
+        this.loading.set(false);
+      }
       
       // Show success message
-      const toast = await this.toastCtrl.create({
-        message: 'Category updated successfully!',
-        duration: 2000,
-        color: 'success',
-        position: 'top'
-      });
-      await toast.present();
-    } else if (role === 'deleted') {
-      // Reload categories
-      this.searchSubject.next(this.searchTerm());
+      const message = role === 'saved' 
+        ? 'Category updated successfully!' 
+        : 'Category deleted successfully!';
       
-      // Show success message
       const toast = await this.toastCtrl.create({
-        message: 'Category deleted successfully!',
+        message,
         duration: 2000,
         color: 'success',
         position: 'top'

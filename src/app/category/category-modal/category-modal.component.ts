@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, ViewChild, ElementRef, Input, effect } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ModalController, ToastController, LoadingController, AlertController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -54,11 +54,11 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
   private readonly loadingCtrl = inject(LoadingController);
   private readonly alertCtrl = inject(AlertController);
 
-  // Input
-  @Input() category?: Category;
-
   // ViewChild
   @ViewChild('nameInput', { read: ElementRef }) nameInput?: ElementRef<HTMLIonInputElement>;
+
+  // Input - will be set via componentProps when modal is created
+  @Input() categoryInput?: Category;
 
   // State
   form?: FormGroup;
@@ -72,7 +72,14 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    // Get category from componentProps (set via @Input)
+    // In Ionic standalone components, componentProps map to @Input properties
     this.initForm();
+  }
+
+  // Helper to get category
+  get category(): Category | undefined {
+    return this.categoryInput;
   }
 
   ngAfterViewInit(): void {
@@ -86,7 +93,7 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
 
   private initForm(): void {
     this.form = this.fb.group({
-      name: [this.category?.name || '', [Validators.required, Validators.minLength(1)]]
+      name: [this.categoryInput?.name || '', [Validators.required, Validators.minLength(1)]]
     });
   }
 
@@ -119,18 +126,20 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
     try {
       const formValue = this.form.value;
       const dto: CategoryUpsertDto = {
-        id: this.category?.id,
-        name: formValue.name
+        id: this.categoryInput?.id,
+        name: formValue.name.trim()
       };
 
+      console.log('Saving category:', dto);
       const savedCategory = await firstValueFrom(this.categoryService.upsertCategory(dto));
+      console.log('Category saved successfully:', savedCategory);
 
       await loading.dismiss();
       this.loading = false;
 
       // Show success message
       const toast = await this.toastCtrl.create({
-        message: this.category ? 'Category updated successfully!' : 'Category created successfully!',
+        message: this.categoryInput ? 'Category updated successfully!' : 'Category created successfully!',
         duration: 2000,
         color: 'success',
         position: 'top'
@@ -143,12 +152,33 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
       await loading.dismiss();
       this.loading = false;
 
+      // Log detailed error for debugging
+      console.error('Error saving category:', error);
+      console.error('Error details:', {
+        message: error.message,
+        error: error.error,
+        status: error.status,
+        statusText: error.statusText
+      });
+
       // Show error message
-      this.errorMessage = error.error?.message || 'An error occurred while saving. Please try again.';
+      let errorMsg = 'An error occurred while saving. Please try again.';
+      
+      if (error.message) {
+        errorMsg = error.message;
+      } else if (error.error?.message) {
+        errorMsg = error.error.message;
+      } else if (error.error?.error) {
+        errorMsg = error.error.error;
+      } else if (typeof error.error === 'string') {
+        errorMsg = error.error;
+      }
+      
+      this.errorMessage = errorMsg;
       
       const toast = await this.toastCtrl.create({
-        message: this.errorMessage,
-        duration: 3000,
+        message: errorMsg,
+        duration: 4000,
         color: 'danger',
         position: 'top'
       });
@@ -157,14 +187,14 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
   }
 
   async delete(): Promise<void> {
-    if (!this.category?.id || this.loading) {
+    if (!this.categoryInput?.id || this.loading) {
       return;
     }
 
     // Show confirmation alert
     const alert = await this.alertCtrl.create({
       header: 'Delete Category',
-      message: `Are you sure you want to delete "${this.category.name}"? This action cannot be undone.`,
+      message: `Are you sure you want to delete "${this.categoryInput.name}"? This action cannot be undone.`,
       buttons: [
         {
           text: 'Cancel',
@@ -183,7 +213,7 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
   }
 
   private async performDelete(): Promise<void> {
-    if (!this.category?.id || this.loading) {
+    if (!this.categoryInput?.id || this.loading) {
       return;
     }
 
@@ -197,7 +227,7 @@ export default class CategoryModalComponent implements OnInit, AfterViewInit {
     await loading.present();
 
     try {
-      await firstValueFrom(this.categoryService.deleteCategory(this.category.id));
+      await firstValueFrom(this.categoryService.deleteCategory(this.categoryInput.id));
 
       await loading.dismiss();
       this.loading = false;

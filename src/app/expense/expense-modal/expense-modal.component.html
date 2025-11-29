@@ -6,7 +6,7 @@
         <span style="margin-left: 8px;">CANCEL</span>
       </ion-button>
     </ion-buttons>
-    <ion-title>Add Expense</ion-title>
+    <ion-title>{{ expenseInput ? 'Edit Expense' : 'Add Expense' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="save()" [disabled]="loading || form.invalid">
         @if (loading) {
@@ -111,5 +111,19 @@
           required></ion-input>
       </ion-item>
     </form>
+
+    <!-- Delete Button (only for edit mode) -->
+    @if (expenseInput) {
+      <ion-button 
+        expand="block" 
+        color="danger" 
+        fill="outline" 
+        (click)="delete()" 
+        [disabled]="loading"
+        style="margin-top: 24px;">
+        <ion-icon slot="start" name="trash"></ion-icon>
+        Delete Expense
+      </ion-button>
+    }
   </div>
 </ion-content>

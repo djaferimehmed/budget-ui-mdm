@@ -5,6 +5,11 @@
       "^/api": ""
     },
     "changeOrigin": true,
-    "secure": false
+    "secure": false,
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    "logLevel": "debug"
   }
 }
